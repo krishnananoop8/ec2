@@ -26,30 +26,30 @@ fi
 echo "ok. You chose $choice and we'll use ${algorithm[$choice-1]} Clustering"
 clustertype=${algorithm[$choice-1]} 
 
-hadoop fs -mkdir -p cluster_cnn/cnn-seqdir
-mahout seqdirectory -i cluster_cnn/data -o cluster_cnn/cnn-seqdir -c UTF-8 -chunk 5
+hadoop fs -mkdir -p cnn_cluster/cnn-seqdir
+mahout seqdirectory -i cnn_cluster/data -o cnn_cluster/cnn-seqdir -c UTF-8 -chunk 5
 
 
 if [ "x$clustertype" == "xkmeans" ]; then
   mahout seq2sparse \
-    -i cluster_cnn/cnn-seqdir/ \
-    -o cluster_cnn/cnn-seqdir-sparse-kmeans --maxDFPercent 85 --namedVector \
+    -i cnn_cluster/cnn-seqdir/ \
+    -o cnn_cluster/cnn-seqdir-sparse-kmeans --maxDFPercent 85 --namedVector \
   && \
   mahout kmeans \
-    -i cluster_cnn/cnn-seqdir-sparse-kmeans/tfidf-vectors/ \
-    -c cluster_cnn/cnn-kmeans-clusters \
-    -o cluster_cnn/cnn-kmeans \
+    -i cnn_cluster/cnn-seqdir-sparse-kmeans/tfidf-vectors/ \
+    -c cnn_cluster/cnn-kmeans-clusters \
+    -o cnn_cluster/cnn-kmeans \
     -dm org.apache.mahout.common.distance.CosineDistanceMeasure \
     -x 10 -k 20 -ow --clustering \
   && \
   mahout clusterdump \
-    -i cluster_cnn/cnn-kmeans/clusters-*-final \
-    -o cluster_cnn/clusterdump \
-    -d cluster_cnn/cnn-seqdir-sparse-kmeans/dictionary.file-0 \
+    -i cnn_cluster/cnn-kmeans/clusters-*-final \
+    -o cnn_cluster/clusterdump \
+    -d cnn_cluster/cnn-seqdir-sparse-kmeans/dictionary.file-0 \
     -dt sequencefile -b 100 -n 5 --evaluate -dm org.apache.mahout.common.distance.CosineDistanceMeasure -sp 0 \
-    --pointsDir cluster_cnn/cnn-kmeans/clusteredPoints \
+    --pointsDir cnn_cluster/cnn-kmeans/clusteredPoints \
     && \
-  hadoop fs -cat cluster_cnn/clusterdump
+  hadoop fs -cat cnn_cluster/clusterdump
 elif [ "x$clustertype" == "xfuzzykmeans" ]; then
   mahout seq2sparse \
     -i reuters-out-seqdir/ \

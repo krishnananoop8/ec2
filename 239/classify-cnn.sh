@@ -34,42 +34,42 @@ if [ "x$alg" == "xnaivebayes"  -o  "x$alg" == "xcnaivebayes" ]; then
 
   echo "Creating sequence files from cnn data"
   mahout seqdirectory \
-    -i classify_cnn/data \
-    -o classify_cnn/data-seq
+    -i cnn_classify/data \
+    -o cnn_classify/data-seq
 
   echo "Converting sequence files to vectors"
   mahout seq2sparse \
-    -i classify_cnn/data-seq \
-    -o classify_cnn/data-vectors  -lnorm -nv  -wt tfidf
+    -i cnn_classify/data-seq \
+    -o cnn_classify/data-vectors  -lnorm -nv  -wt tfidf
 
   echo "Creating training and holdout set with a random 80-20 split of the generated vector dataset"
   mahout split \
-    -i classify_cnn/data-vectors/tfidf-vectors \
-    --trainingOutput classify_cnn/data-train-vectors \
-    --testOutput classify_cnn/data-test-vectors  \
+    -i cnn_classify/data-vectors/tfidf-vectors \
+    --trainingOutput cnn_classify/data-train-vectors \
+    --testOutput cnn_classify/data-test-vectors  \
     --randomSelectionPct 40 --overwrite --sequenceFiles -xm sequential
 
   echo "Training Naive Bayes model"
   mahout trainnb \
-    -i classify_cnn/data-train-vectors -el \
-    -o classify_cnn/model \
-    -li classify_cnn/labelindex \
+    -i cnn_classify/data-train-vectors -el \
+    -o cnn_classify/model \
+    -li cnn_classify/labelindex \
     -ow $c
 
   echo "Self testing on training set"
 
   mahout testnb \
-    -i classify_cnn/data-train-vectors\
-    -m classify_cnn/model \
-    -l classify_cnn/labelindex \
-    -ow -o classify_cnn/data-testing $c
+    -i cnn_classify/data-train-vectors\
+    -m cnn_classify/model \
+    -l cnn_classify/labelindex \
+    -ow -o cnn_classify/data-testing $c
 
   echo "Testing on holdout set"
 
   mahout testnb \
-    -i classify_cnn/data-test-vectors\
-    -m classify_cnn/model \
-    -l classify_cnn/labelindex \
-    -ow -o classify_cnn/data-testing $c
+    -i cnn_classify/data-test-vectors\
+    -m cnn_classify/model \
+    -l cnn_classify/labelindex \
+    -ow -o cnn_classify/data-testing $c
 
 fi
