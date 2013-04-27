@@ -1,0 +1,1 @@
+^_^Title^_^Folk songs and bell gongs: Test your knowledge of New Year customs ^_^Story^_^ {{#if is_correct}}Correct{{else}}Wrong{{/if}}! The answer is {{answer}}.(Image Credit: {{answer_image_credit}}){{score_comment}}Share your result

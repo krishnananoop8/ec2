@@ -1,0 +1,1 @@
+^_^Title^_^Are you a 2012 newshound? Take the quiz ^_^Story^_^ {{#if is_correct}}Correct{{else}}Wrong{{/if}}! The answer is {{answer}}.(Image Credit: {{answer_image_credit}}){{score_comment}}Share your result
